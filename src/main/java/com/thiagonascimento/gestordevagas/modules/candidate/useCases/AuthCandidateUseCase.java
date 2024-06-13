@@ -45,7 +45,7 @@ public class AuthCandidateUseCase {
                 .withIssuer("gestordevagas")
                 .withExpiresAt(expires_in)
                 .withSubject(candidate.getId().toString())
-                .withClaim("roles", List.of("candidate"))
+                .withClaim("roles", List.of("CANDIDATE"))
                 .sign(algorithm);
 
         var authCandidateResponse = AuthCandidateResponseDTO.builder()
