@@ -3,20 +3,25 @@ package com.thiagonascimento.gestordevagas.modules.candidate.controllers;
 import com.thiagonascimento.gestordevagas.exceptions.UserFoundException;
 import com.thiagonascimento.gestordevagas.modules.candidate.entities.CandidateEntity;
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.CreateCandidateUseCase;
+import com.thiagonascimento.gestordevagas.modules.candidate.useCases.ProfileCandidateUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/candidates")
+@RequestMapping("/candidate")
 public class CandidateController {
 
     @Autowired
     private CreateCandidateUseCase createCandidateUseCase;
+
+    @Autowired
+    private ProfileCandidateUseCase profileCandidateUseCase;
 
     @PostMapping("/")
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity request) {
@@ -25,6 +30,17 @@ public class CandidateController {
 
             return ResponseEntity.ok(candidate);
         } catch (UserFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<Object> get(HttpServletRequest request) {
+        try {
+            var id = UUID.fromString(request.getAttribute("candidate_id").toString());
+            var profile = this.profileCandidateUseCase.execute(id);
+            return ResponseEntity.ok(profile);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

@@ -1,7 +1,9 @@
 package com.thiagonascimento.gestordevagas.modules.company.controllers;
 
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.CreateCandidateUseCase;
+import com.thiagonascimento.gestordevagas.modules.company.dto.AuthCompanyDTO;
 import com.thiagonascimento.gestordevagas.modules.company.entities.CompanyEntity;
+import com.thiagonascimento.gestordevagas.modules.company.useCases.AuthCompanyUseCase;
 import com.thiagonascimento.gestordevagas.modules.company.useCases.CreateCompanyUseCase;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
