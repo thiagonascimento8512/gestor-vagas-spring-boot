@@ -1,6 +1,7 @@
 package com.thiagonascimento.gestordevagas.modules.candidate.controllers;
 
 import com.thiagonascimento.gestordevagas.exceptions.UserFoundException;
+import com.thiagonascimento.gestordevagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import com.thiagonascimento.gestordevagas.modules.candidate.entities.CandidateEntity;
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.CreateCandidateUseCase;
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,6 +49,17 @@ public class CandidateController {
 
     @GetMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidate", description = "Informações do candidato")
+    @Operation(
+            summary = "Perfil do Candidato",
+            description = "Esta função retorna o perfil do candidato."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Perfil do candidato retornado com sucesso.",
+                    content = @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "User not found")
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> get(HttpServletRequest request) {
         try {
             var id = UUID.fromString(request.getAttribute("candidate_id").toString());
