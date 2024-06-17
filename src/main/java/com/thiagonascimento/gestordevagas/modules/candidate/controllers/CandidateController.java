@@ -25,6 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/candidate")
+@Tag(name = "Candidate", description = "Informações do candidato")
 public class CandidateController {
 
     @Autowired
@@ -37,6 +38,15 @@ public class CandidateController {
     private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
 
     @PostMapping("/")
+    @Operation(
+            summary = "Cadastrar Candidato",
+            description = "Esta função cadastra um novo candidato."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Candidato cadastrado com sucesso.",
+                    content = @Content(schema = @Schema(implementation = CandidateEntity.class))),
+            @ApiResponse(responseCode = "400", description = "User already exists")
+    })
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity request) {
         try {
             var candidate = createCandidateUseCase.execute(request);
@@ -49,7 +59,6 @@ public class CandidateController {
 
     @GetMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
-    @Tag(name = "Candidate", description = "Informações do candidato")
     @Operation(
             summary = "Perfil do Candidato",
             description = "Esta função retorna o perfil do candidato."
@@ -72,7 +81,6 @@ public class CandidateController {
 
     @GetMapping("/job")
     @PreAuthorize("hasRole('CANDIDATE')")
-    @Tag(name = "Candidate", description = "Informações do candidato")
     @Operation(summary = "Listar vagas por filtro", description = "Listagem de todas as vagas disponíveis por filtro.")
     @ApiResponse(
             responseCode = "200",
