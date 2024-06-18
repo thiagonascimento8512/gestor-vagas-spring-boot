@@ -65,7 +65,7 @@ public class CreateJobControllerTest {
                 .benefits("VR, VT, Plano de Saúde")
                 .level("Júnior")
                 .build();
-
+        
         mvc.perform(MockMvcRequestBuilders.post("/company/job/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectToJson(jobDTO))
