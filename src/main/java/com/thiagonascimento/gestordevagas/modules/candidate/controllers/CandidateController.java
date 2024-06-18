@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,17 +28,20 @@ import java.util.UUID;
 @Tag(name = "Candidate", description = "Informações do candidato")
 public class CandidateController {
 
-    @Autowired
-    private CreateCandidateUseCase createCandidateUseCase;
+    private final CreateCandidateUseCase createCandidateUseCase;
 
-    @Autowired
-    private ProfileCandidateUseCase profileCandidateUseCase;
+    private final ProfileCandidateUseCase profileCandidateUseCase;
 
-    @Autowired
-    private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+    private final ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
 
-    @Autowired
-    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
+    private final ApplyJobCandidateUseCase applyJobCandidateUseCase;
+
+    public CandidateController(CreateCandidateUseCase createCandidateUseCase, ProfileCandidateUseCase profileCandidateUseCase, ListAllJobsByFilterUseCase listAllJobsByFilterUseCase, ApplyJobCandidateUseCase applyJobCandidateUseCase) {
+        this.createCandidateUseCase = createCandidateUseCase;
+        this.profileCandidateUseCase = profileCandidateUseCase;
+        this.listAllJobsByFilterUseCase = listAllJobsByFilterUseCase;
+        this.applyJobCandidateUseCase = applyJobCandidateUseCase;
+    }
 
     @PostMapping("/")
     @Operation(

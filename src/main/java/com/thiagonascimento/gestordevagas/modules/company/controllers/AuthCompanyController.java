@@ -3,7 +3,6 @@ package com.thiagonascimento.gestordevagas.modules.company.controllers;
 import com.thiagonascimento.gestordevagas.modules.company.dto.AuthCompanyDTO;
 import com.thiagonascimento.gestordevagas.modules.company.useCases.AuthCompanyUseCase;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +15,11 @@ import java.util.Map;
 @RequestMapping("/company")
 public class AuthCompanyController {
 
-    @Autowired
-    private AuthCompanyUseCase authC;
+    private final AuthCompanyUseCase authC;
+
+    public AuthCompanyController(AuthCompanyUseCase authC) {
+        this.authC = authC;
+    }
 
     @PostMapping("/auth")
     public ResponseEntity<Object> auth(@Valid @RequestBody AuthCompanyDTO authCompanyDTO) {

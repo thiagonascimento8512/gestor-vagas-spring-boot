@@ -2,7 +2,6 @@ package com.thiagonascimento.gestordevagas.modules.candidate.controllers;
 
 import com.thiagonascimento.gestordevagas.modules.candidate.dto.AuthCandidateRequestDTO;
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.AuthCandidateUseCase;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/candidate")
 public class AuthCandidateController {
 
-    @Autowired
-    private AuthCandidateUseCase authCandidateUseCase;
+    private final AuthCandidateUseCase authCandidateUseCase;
+
+    public AuthCandidateController(AuthCandidateUseCase authCandidateUseCase) {
+        this.authCandidateUseCase = authCandidateUseCase;
+    }
 
     @PostMapping("/auth")
     public ResponseEntity<Object> auth(@RequestBody AuthCandidateRequestDTO authCandidateDTO) {

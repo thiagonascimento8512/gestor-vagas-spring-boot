@@ -1,12 +1,8 @@
 package com.thiagonascimento.gestordevagas.modules.company.controllers;
 
-import com.thiagonascimento.gestordevagas.modules.candidate.useCases.CreateCandidateUseCase;
-import com.thiagonascimento.gestordevagas.modules.company.dto.AuthCompanyDTO;
 import com.thiagonascimento.gestordevagas.modules.company.entities.CompanyEntity;
-import com.thiagonascimento.gestordevagas.modules.company.useCases.AuthCompanyUseCase;
 import com.thiagonascimento.gestordevagas.modules.company.useCases.CreateCompanyUseCase;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/company")
 public class CompanyController {
 
-    @Autowired
-    private CreateCompanyUseCase createCompanyUseCase;
+    private final CreateCompanyUseCase createCompanyUseCase;
+
+    public CompanyController(CreateCompanyUseCase createCompanyUseCase) {
+        this.createCompanyUseCase = createCompanyUseCase;
+    }
 
     @PostMapping("/")
     public ResponseEntity<Object> create(@Valid @RequestBody CompanyEntity company) {
