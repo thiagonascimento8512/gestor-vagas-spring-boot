@@ -3,6 +3,7 @@ package com.thiagonascimento.gestordevagas.modules.candidate.controllers;
 import com.thiagonascimento.gestordevagas.exceptions.UserFoundException;
 import com.thiagonascimento.gestordevagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import com.thiagonascimento.gestordevagas.modules.candidate.entities.CandidateEntity;
+import com.thiagonascimento.gestordevagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.CreateCandidateUseCase;
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import com.thiagonascimento.gestordevagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -36,6 +37,9 @@ public class CandidateController {
 
     @Autowired
     private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+
+    @Autowired
+    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     @PostMapping("/")
     @Operation(
@@ -94,6 +98,20 @@ public class CandidateController {
         try {
             var jobs = this.listAllJobsByFilterUseCase.execute(filter);
             return ResponseEntity.ok(jobs);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @SecurityRequirement(name = "jwt_auth")
+    @Operation(summary = "Inscrição do candidato em uma vaga", description = "Esta função inscreve o candidato em uma vaga.")
+    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody UUID jobId) {
+        try {
+            var candidateId = UUID.fromString(request.getAttribute("candidate_id").toString());
+            var applyJob = this.applyJobCandidateUseCase.execute(candidateId, jobId);
+            return ResponseEntity.ok(applyJob);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

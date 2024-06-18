@@ -34,21 +34,27 @@ public class JobController {
     @Tag(name = "Vagas", description = "Informações das vagas")
     @Operation(summary = "Cadastro de Vagas", description = "Está função é responsável por cadastrar uma nova vaga.")
     @ApiResponse(
-            responseCode = "200",
+            responseCode = "201",
             description = "Vaga cadastrada com sucesso.",
             content = {
                     @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
             }
     )
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<JobEntity> create(@Valid @RequestBody CreateJobDTO jobDTO, HttpServletRequest request) {
-        var companyId = request.getAttribute("company_id").toString();
-        var jobEntity = JobEntity.builder()
-                .companyId(UUID.fromString(companyId))
-                .description(jobDTO.getDescription())
-                .benefits(jobDTO.getBenefits())
-                .level(jobDTO.getLevel())
-                .build();
-        return ResponseEntity.ok(this.createJobUseCase.execute(jobEntity));
+    public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO jobDTO, HttpServletRequest request) {
+        try {
+            var companyId = request.getAttribute("company_id").toString();
+            var jobEntity = JobEntity.builder()
+                    .companyId(UUID.fromString(companyId))
+                    .description(jobDTO.getDescription())
+                    .benefits(jobDTO.getBenefits())
+                    .level(jobDTO.getLevel())
+                    .build();
+
+            var job = createJobUseCase.execute(jobEntity);
+            return ResponseEntity.status(201).body(job);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
